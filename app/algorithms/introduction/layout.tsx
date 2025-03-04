@@ -1,6 +1,4 @@
-// Add the `"use client"` directive at the top
 "use client";
-
 import { usePathname } from "next/navigation";
 import { HomeIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
@@ -13,7 +11,7 @@ export default function BlogLayout({
   const pathname = usePathname();
   const paths = pathname.split("/").filter((path) => path);
   return (
-    <div className="relative lg:flex h-full">
+    <div className="relative flex h-full">
       <section className="flex-1">
         <div className="relative flex flex-col h-full">
           <div className="relative flex justify-start items-center p-4">
@@ -36,7 +34,7 @@ export default function BlogLayout({
           <div className="flex-1">{children}</div>
         </div>
       </section>
-      <section className="w-64 h-full border-l overflow-y-auto lg:block hidden"></section>
+      <section className="w-64 h-full border-l overflow-y-auto"></section>
     </div>
   );
 }

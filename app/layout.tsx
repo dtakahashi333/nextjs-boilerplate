@@ -31,6 +31,10 @@ const contents = [
     title: "React",
     path: "/react",
   },
+  {
+    title: "アルゴリズム",
+    path: "/algorithms",
+  },
 ];
 
 export default function RootLayout({
@@ -49,14 +53,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className="sticky top-0 z-10 bg-white flex items-center justify-between w-full h-16 px-4 border-b">
+        <nav className="sticky top-0 z-10 bg-white flex lg:justify-between justify-start items-center w-full h-16 px-4 border-b">
+          {/* Hamburger Menu */}
+          <button className="lg:hidden block text-2xl px-2 py-1 mr-2">☰</button>
+
           {/* Page Title */}
           <div className="flex-shrink-0 text-white text-xl font-semibold bg-blue-500 px-4 py-1">
             Webフロントエンド入門
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden sm:block sm:ml-6">
+          <div className="lg:block hidden ml-6">
             <div className="flex space-x-4">
               {contents.map((content, index) => (
                 <Link
@@ -69,24 +76,9 @@ export default function RootLayout({
               ))}
             </div>
           </div>
-
-          {/* Mobile Menu (Hidden by default) */}
-          <div className="sm:hidden" id="mobile-menu">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {contents.map((content, index) => (
-                <Link
-                  key={index}
-                  href={content.path}
-                  className="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-                >
-                  {content.title}
-                </Link>
-              ))}
-            </div>
-          </div>
         </nav>
         {/* Main Content (Right Section) */}
-        <div className="flex">{children}</div>
+        <div>{children}</div>
         {/* Footer with Copyright */}
         <footer className="bg-gray-800 text-white py-4 text-center">
           <p>

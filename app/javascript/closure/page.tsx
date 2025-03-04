@@ -8,7 +8,7 @@ export default function Page() {
       </p>
       <p className="mb-6">クロージャは以下のように定義します。</p>
       <pre className="bg-gray-200 rounded-md overflow-x-auto mb-6">
-        <code className="block text-sm px-6">
+        <code className="block px-4 py-2 text-sm">
           {`
 function outer() {
   let outerVar = "I'm an outer variable";

@@ -10,41 +10,21 @@ const contents = [
     path: "introduction",
   },
   {
-    title: "クロージャ",
-    path: "closure",
-  },
-  {
-    title: "スコープ",
-    path: "scope",
-  },
-  {
-    title: "var・let・const",
-    path: "var-let-const",
-  },
-  {
-    title: "関数・関数式・アロー関数",
-    path: "function-function-expression-arrow-function",
-  },
-  {
-    title: "this",
-    path: "this",
-  },
-  {
-    title: "ジェネレータ",
-    path: "generator",
-  },
+    title: "Rotate Array",
+    path: "rotate-array",
+  }
 ];
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <div className="lg:flex w-full">
+    <>
       {/* Left Section */}
-      <aside>
-        <div className="sticky top-16 z-5 bg-white w-64 h-[calc(100vh-64px)] border-r p-2 overflow-y-auto lg:block hidden">
+      <div>
+        <aside className="sticky w-64 top-16 h-[calc(100vh-64px)] bg-white border-r p-2 overflow-y-auto">
           {contents.map((content, index) => {
             // Define the target URL for each content
-            const targetUrl = `/javascript/${content.path}`;
+            const targetUrl = `/algorithms/${content.path}`;
 
             // Check if the current route matches the targetUrl
             const isActive = pathname === targetUrl;
@@ -63,11 +43,11 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
-        </div>
-      </aside>
+        </aside>
+      </div>
 
       {/* Right Section */}
       <main className="flex-1">{children}</main>
-    </div>
+    </>
   );
 }

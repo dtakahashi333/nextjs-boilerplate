@@ -1,4 +1,6 @@
+// Add the `"use client"` directive at the top
 "use client";
+
 import { usePathname } from "next/navigation";
 import { HomeIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";

@@ -13,7 +13,7 @@ export default function Home() {
         <main className="bg-white bg-opacity-90 m-12 p-10">
           <h1 className="text-5xl font-bold mb-10">Webフロントエンド入門</h1>
           <h3 className="text-3xl font-bold mb-6">ブログについて</h3>
-          <p className="text-lg">
+          <p>
             ソフトウェア・エンジニアとして Web
             アプリケーション開発を行っていく中で出会ったコアな知識や使えるテクニックを解説していくブログです。
           </p>
