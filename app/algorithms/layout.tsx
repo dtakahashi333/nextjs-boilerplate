@@ -18,10 +18,10 @@ const contents = [
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <>
+    <div className="lg:flex w-full">
       {/* Left Section */}
-      <div>
-        <aside className="sticky w-64 top-16 h-[calc(100vh-64px)] bg-white border-r p-2 overflow-y-auto">
+      <aside>
+        <div className="sticky top-16 z-5 bg-white w-64 h-[calc(100vh-64px)] border-r p-2 overflow-y-auto lg:block hidden">
           {contents.map((content, index) => {
             // Define the target URL for each content
             const targetUrl = `/algorithms/${content.path}`;
@@ -43,11 +43,11 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
-        </aside>
-      </div>
+        </div>
+      </aside>
 
       {/* Right Section */}
       <main className="flex-1">{children}</main>
-    </>
+    </div>
   );
 }
