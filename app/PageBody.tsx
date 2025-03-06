@@ -25,7 +25,7 @@ const contents = [
 
 // Functional component with TypeScript.
 const PageBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isOpen, setIsOpen } = useSidebarContext();
+  const { setIsOpen } = useSidebarContext();
   return (
     <>
       {/* Top Navigation */}
