@@ -2,24 +2,24 @@
 
 import Link from "next/link";
 import React from "react";
-import { useSidebarContext } from "./context/SidebarContext";
+import { useSidebarContext } from "../app/context/SidebarContext";
 
-const contents = [
+const navItems = [
   {
     title: "Home",
     path: "/",
   },
   {
     title: "JavaScript",
-    path: "/javascript",
+    path: "/blog/javascript/introduction",
   },
   {
     title: "React",
-    path: "/react",
+    path: "/blog/react/introduction",
   },
   {
     title: "アルゴリズム",
-    path: "/algorithms",
+    path: "/blog/algorithms/introduction",
   },
 ];
 
@@ -46,13 +46,13 @@ const PageBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Navigation Links */}
         <div className="lg:block hidden ml-6">
           <div className="flex space-x-4">
-            {contents.map((content, index) => (
+            {navItems.map(({ title, path }, index) => (
               <Link
                 key={index}
-                href={`${content.path}`}
+                href={`${path}`}
                 className="block text-gray-600 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-300"
               >
-                {content.title}
+                {title}
               </Link>
             ))}
           </div>

@@ -20,4 +20,11 @@ export const blogNav: BlogNav = {
     { title: "this", slug: "this" },
     { title: "ジェネレータ", slug: "generator" },
   ],
+  react: [{ title: "はじめに", slug: "introduction" }],
+  algorithm: [
+    { title: "はじめに", slug: "introduction" },
+    { title: "Rotate Array", slug: "rotate-array" },
+    { title: "Pruduct of Array Except Self", slug: "product-except-self" },
+    { title: "Gas Station", slug: "gas-station" },
+  ],
 };
