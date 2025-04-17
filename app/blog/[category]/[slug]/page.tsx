@@ -3,7 +3,7 @@ import { use } from "react";
 import fs from "fs";
 import path from "path";
 
-import Wrapper from "@/components/Wrapper";
+import MdxWrapper from "@/components/MdxWrapper";
 
 export default function Page({
   params,
@@ -13,9 +13,9 @@ export default function Page({
   const { category, slug } = use(params);
   const { default: Post } = use(import(`@/content/${category}/${slug}.mdx`));
   return (
-    <Wrapper>
+    <MdxWrapper>
       <Post />
-    </Wrapper>
+    </MdxWrapper>
   );
 }
 
