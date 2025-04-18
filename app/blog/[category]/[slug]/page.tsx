@@ -17,7 +17,7 @@ export default function Page({
 }) {
   const { category, slug } = use(params);
   const source = fs.readFileSync(
-    path.join(process.cwd(), "content", category, `${slug}.mdx`),
+    path.join(process.cwd(), "posts", category, `${slug}.mdx`),
     { encoding: "utf-8" }
   );
   return (
@@ -36,7 +36,7 @@ export default function Page({
 }
 
 export function generateStaticParams() {
-  const contentPath = path.join(process.cwd(), "content");
+  const contentPath = path.join(process.cwd(), "posts");
   const categories = fs.readdirSync(contentPath);
   const params: { category: string; slug: string }[] = [];
   for (const category of categories) {

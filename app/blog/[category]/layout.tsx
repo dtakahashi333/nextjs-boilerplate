@@ -3,15 +3,15 @@ import { ReactNode, use } from "react";
 
 import SideNav from "@/components/SideNav";
 
+interface CategoryLayoutProps {
+  readonly children: ReactNode;
+  params: Promise<{ category: string }>;
+}
+
 export default function CategoryLayout({
   children,
   params,
-}: {
-  children: ReactNode;
-  params: Promise<{
-    category: string;
-  }>;
-}) {
+}: CategoryLayoutProps) {
   const { category } = use(params);
   return (
     <div className="lg:flex w-full">

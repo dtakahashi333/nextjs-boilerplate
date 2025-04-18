@@ -4,16 +4,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useSidebarContext } from "@/app/context/SidebarContext";
+import { useSidebar } from "@/context/SidebarContext";
 
-import { blogNav } from "@/content/blog-nav";
+import { blogNav } from "@/posts/blog-nav";
 
 interface SideNavProps {
   category: string;
 }
 
 export default function SideNav({ category }: SideNavProps) {
-  const { isOpen, setIsOpen } = useSidebarContext();
+  const { isOpen, setIsOpen } = useSidebar();
   const pathname = usePathname();
   const navItems = blogNav[category] || [];
   return (
@@ -21,7 +21,7 @@ export default function SideNav({ category }: SideNavProps) {
       <aside>
         <div className="sticky top-16 z-5 bg-white w-64 h-[calc(100vh-64px)] border-r p-2 overflow-y-auto lg:block hidden">
           {navItems.map(({ title, slug }, index) => {
-            // Define the target URL for each content
+            // Define the target URL for each post
             const targetUrl = `/blog/${category}/${slug}`;
 
             // Check if the current route matches the targetUrl
@@ -75,7 +75,7 @@ export default function SideNav({ category }: SideNavProps) {
           </div>
           <div className="p-4">
             {navItems.map(({ title, slug }, index) => {
-              // Define the target URL for each content
+              // Define the target URL for each post
               const targetUrl = `/blog/${category}/${slug}`;
 
               // Check if the current route matches the targetUrl

@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export default function BlogLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const pathname = usePathname();
   const paths = pathname.split("/").filter((path) => path);
   return (
@@ -17,7 +17,10 @@ export default function BlogLayout({
       <section className="flex-1">
         <div className="relative flex flex-col h-full">
           <div className="relative flex justify-start items-center p-4">
-            <Link href="/" className="block px-2 py-1 rounded-full hover:text-blue-500 hover:bg-gray-200">
+            <Link
+              href="/"
+              className="block px-2 py-1 rounded-full hover:text-blue-500 hover:bg-gray-200"
+            >
               <HomeIcon className="w-5 h-5"></HomeIcon>
             </Link>
             {paths.map((path, index) => (

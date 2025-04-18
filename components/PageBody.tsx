@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { useSidebarContext } from "../app/context/SidebarContext";
+import { useSidebar } from "../context/SidebarContext";
 
 const navItems = [
   {
@@ -25,7 +25,7 @@ const navItems = [
 
 // Functional component with TypeScript.
 const PageBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { setIsOpen } = useSidebarContext();
+  const { setIsOpen } = useSidebar();
   return (
     <>
       {/* Top Navigation */}

@@ -11,7 +11,7 @@ interface SidebarContextType {
 // Create a context with default values
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
-export const SidebarContextProvider: React.FC<{
+export const SidebarProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,12 +23,10 @@ export const SidebarContextProvider: React.FC<{
 };
 
 // Custom hook to use the context
-export const useSidebarContext = () => {
+export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (!context) {
-    throw new Error(
-      "useSidebarContext must be used within a SidebarContextProvider"
-    );
+    throw new Error("useSidebar must be used within a SidebarProvider");
   }
   return context;
 };
