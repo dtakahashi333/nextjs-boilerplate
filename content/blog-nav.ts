@@ -21,7 +21,7 @@ export const blogNav: BlogNav = {
     { title: "ジェネレータ", slug: "generator" },
   ],
   react: [{ title: "はじめに", slug: "introduction" }],
-  algorithm: [
+  algorithms: [
     { title: "はじめに", slug: "introduction" },
     { title: "Rotate Array", slug: "rotate-array" },
     { title: "Pruduct of Array Except Self", slug: "product-except-self" },
