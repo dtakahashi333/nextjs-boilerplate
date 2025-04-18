@@ -2,8 +2,13 @@
 import { use } from "react";
 import fs from "fs";
 import path from "path";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypePrism from "rehype-prism-plus";
 
-import MdxWrapper from "@/components/MdxWrapper";
+// import MdxWrapper from "@/components/MdxWrapper";
+
+import "prism-themes/themes/prism-one-light.css";
 
 export default function Page({
   params,
@@ -11,11 +16,22 @@ export default function Page({
   params: Promise<{ category: string; slug: string }>;
 }) {
   const { category, slug } = use(params);
-  const { default: Post } = use(import(`@/content/${category}/${slug}.mdx`));
+  const source = fs.readFileSync(
+    path.join(process.cwd(), "content", category, `${slug}.mdx`),
+    { encoding: "utf-8" }
+  );
   return (
-    <MdxWrapper>
-      <Post />
-    </MdxWrapper>
+    <div className="prose !max-w-none !p-10">
+      <MDXRemote
+        source={source}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [rehypePrism],
+          },
+        }}
+      />
+    </div>
   );
 }
 

@@ -1,6 +1,4 @@
-// Add the `"use client"` directive at the top
-"use client";
-
+// /app/blog/[category]/layout.tsx
 import { ReactNode, use } from "react";
 
 import SideNav from "@/components/SideNav";

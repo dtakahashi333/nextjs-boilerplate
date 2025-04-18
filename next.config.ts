@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
+// import createMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -9,11 +9,21 @@ const nextConfig: NextConfig = {
   compiler: {
     styledComponents: true, // Enable styled-components support
   },
+  transpilePackages: ["next-mdx-remote"],
 };
 
-const withMDX = createMDX({
-  // Add markdown plugins here, as desired
-});
+// const withMDX = createMDX({});
+// const withMDX = createMDX(async () => {
+//   const rehypeHighlight = (await import("rehype-highlight")).default;
+//   return {
+//     extension: /\.mdx?$/,
+//     options: {
+//       rehypePlugins: [rehypeHighlight],
+//       format: "mdx",
+//     },
+//   };
+// });
 
 // Merge MDX config with Next.js config
-export default withMDX(nextConfig);
+// export default withMDX(nextConfig);
+export default nextConfig;

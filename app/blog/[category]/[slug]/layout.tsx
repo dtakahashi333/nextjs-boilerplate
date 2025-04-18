@@ -33,7 +33,7 @@ export default function BlogLayout({
               </div>
             ))}
           </div>
-          <div className="flex-1">{children}</div>
+          <article className="flex-1">{children}</article>
         </div>
       </section>
       <section className="w-64 h-full border-l overflow-y-auto"></section>
