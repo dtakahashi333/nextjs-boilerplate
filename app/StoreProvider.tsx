@@ -5,9 +5,9 @@ import { makeStore, AppStore } from "@/lib/store";
 
 export default function StoreProvider({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const storeRef = useRef<AppStore | null>(null);
   if (!storeRef.current) {
     // Create the store instance the first time this renders

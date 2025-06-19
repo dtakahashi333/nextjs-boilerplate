@@ -22,7 +22,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   // <Html> (Next.js Custom Component)
   //  - The <Html> component (capitalized H) is specific to Next.js.
   //  - It's used in custom Document files (usually in pages/_document.js or pages/_document.tsx)

@@ -21,6 +21,14 @@ const navItems = [
     title: "アルゴリズム",
     path: "/blog/algorithms/introduction",
   },
+  {
+    title: "TypeScript",
+    path: "/blog/typescript/configuration",
+  },
+  {
+    title: "Netlify",
+    path: "/blog/netlify/configuration",
+  },
 ];
 
 // Functional component with TypeScript.

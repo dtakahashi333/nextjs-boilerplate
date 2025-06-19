@@ -27,4 +27,12 @@ export const blogNav: BlogNav = {
     { title: "Pruduct of Array Except Self", slug: "product-except-self" },
     { title: "Gas Station", slug: "gas-station" },
   ],
+  typescript: [
+    { title: "設定", slug: "configuration" },
+    { title: "リント", slug: "lint" },
+  ],
+  netlify: [
+    { title: "設定", slug: "configuration" },
+    { title: "ログ", slug: "logging" },
+  ],
 };

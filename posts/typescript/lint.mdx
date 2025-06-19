@@ -1,0 +1,80 @@
+# リント（Lint）
+
+ここでは`TypeScript`の`Lint`について説明します。
+
+## 設定
+
+### リントツールのインストール
+
+```sh
+npm install --save-dev eslint @eslint/js typescript typescript-eslint
+```
+
+### リントツールの設定
+
+プロジェクトのルートフォルダに`eslint.config.mjs`ファイルを作成し、以下のコードをコピペします。
+
+```js
+// @ts-check
+
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.recommended
+);
+```
+
+### `package.json`の設定
+
+`package.json`の`scripts`に、以下のどちらかの行を追加します。以下の例では、リント対象のファイルは`src`フォルダ以下にあると仮定します。また、フォルダ内に`.ts`のみ収納の場合は、`.tsx`ファイルを指定する必要はありません。
+
+```json
+"scripts": {
+  ...
+  "lint": "npx eslint ./src --ext .ts,.tsx --debug"
+  もしくは、
+  "lint": "npx eslint './src/**/*.{ts,tsx}' --debug" # ' 'は必須
+}
+```
+
+## リントの実行
+
+`NPM`、もしくは、`NPX`コマンドで、リントを実行します。
+
+```sh
+npm run lint # package.jsonで定義したスクリプトから実行
+もしくは、
+npx eslint ./src --ext .ts,.tsx --debug # npxから直接eslintを実行
+```
+
+## typescript-eslintのオプション
+
+`typescript-eslint`のオプションには以下のものがありますが、基本的は`recommended`で問題ありません。
+
+- [recommended](https://typescript-eslint.io/users/configs#recommended): `推奨するTypeScriptの文法チェック`を行います。しかし、`静的型チェック`は行いません。
+- [recommended-type-checked](https://typescript-eslint.io/users/configs#recommended-type-checked): `推奨するTypeScriptの文法チェック`と、`静的型チェック`の両方を行います。
+- [strict](https://typescript-eslint.io/users/configs#strict): `recommendedよりも厳しい文法チェック`を行います。`静的型チェック`は行いません。
+- [strict-type-checked](https://typescript-eslint.io/users/configs#strict-type-checked): `strict文法チェック`、および、`静的型チェック`を行います。
+- [stylistic](https://typescript-eslint.io/users/configs#stylistic): よりコードの書き方に関するルールを定義しています。例えば、セミコロンの有無など。`stylistic`は`recommended`の上位集合ではない為、`recommended`のチェックも必要の場合は、両方をセットする必要があります。
+- [stylistic-type-checked](https://typescript-eslint.io/users/configs#stylistic-type-checked): `stylistcチェック`と、`静的型チェック`の両方を行います。
+
+大まかに、チェックは、`recommended`、`strict`、`stylistic`の3種類が存在し、そのそれぞれに`type-checked`オプションが追加されたバージョンが存在します。
+
+また、`stylistic`オプションでルールを上書きしたい場合は、以下のように設定します。
+
+```js
+// eslint.config.js (Flat config format)
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  tseslint.configs.recommended,
+  tseslint.configs.stylistic,
+  {
+    rules: {
+      semi: ['error', 'never'], // 行末尾に、セミコロンを使用しない
+    },
+  }
+);
+```

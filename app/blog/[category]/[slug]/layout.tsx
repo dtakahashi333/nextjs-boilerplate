@@ -7,9 +7,9 @@ import Link from "next/link";
 
 export default function BlogLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const pathname = usePathname();
   const paths = pathname.split("/").filter((path) => path);
   return (

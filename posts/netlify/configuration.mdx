@@ -1,0 +1,105 @@
+# 設定
+
+ここでは`netlify.toml`ファイルを用いた、Netlifyのビルド、デプロイ、環境変数の定義の方法を解説します。
+
+## netlify.toml
+
+`netlify.toml`を使用することで、Netlifyのビルド、デプロイ、環境変数の定義などの設定を行うことができます。ただし、一部の項目については`netlify.toml`ではなく、Netlify UI、CLIまたはAPIでのみ設定可能です。
+
+更に環境関数の定義の際は、`netlify.toml`ではなく、Netlify UIの使用をおすすめします。そうすることで、機密情報がレポジトリに保存されることを防ぐことができます。
+
+### ビルド、デプロイ設定
+
+Netlifyでは、`netlify.toml`ファイルの`[build]`セクションで、ビルドやデプロイの挙動（コマンド、出力先など）を定義します。
+
+- `command`: Netlifyがデプロイ前に実行するビルドコマンドを定義。例えば、以下のように、`NPM`の`package.json`に実行するスクリプトを定義し、それを実行するような形で使用することにより、複数のスクリプトを同時に実行することができます。
+
+```toml
+[build]
+  command = "npm run build:all"
+```
+
+```json
+{
+  "scripts": {
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "build:functions": "cd functions && npm install && tsc",
+    "build:all": "npm run build:frontend && npm run build:functions"
+  }
+}
+```
+
+- `base`: Netlifyがビルド時に最初に移動する作業ディレクトリ（ルート・フォルダ）を定義。`command`、`publish`、`functions` に指定されるパスは、すべてこの `base` ディレクトリを基準とした相対パスとして扱われます。`base`が未定義の場合は、`netlify.toml` ファイルが置かれているフォルダがプロジェクトのルートとして使用されます。
+
+- `publish`: Netlifyにデプロイする静的ファイル（HTML、CSS、JavaScript、画像など）が格納されているフォルダを定義。
+
+- `functions`: Netlifyにデプロイするサーバーレス関数（Serverless Functions）ファイルが格納されているフォルダを定義。
+
+例えば、以下のようなフォルダ構成で、Netlifyがビルドコマンドの実行する際、フロントエンドの結果ファイルが`frontend/dist`へ、サーバーレス関数の結果ファイルが`netlify/functions`にそれぞれ格納されるとすると、以下のように`publish`と`functions`を指定することにより、適切にファイルが Netlifyにデプロイされます。
+
+```sh
+/my-project
+├── netlify.toml
+├── frontend/
+│   ├── src/
+│   ├── dist/
+│   └── package.json
+├── functions/
+│   ├── src/
+│   └── package.json
+├── netlify/functions
+└── package.json
+```
+
+```toml
+[build]
+  publish = "frontend/dist"
+  functions = "netlify/functions"
+```
+
+- `environment`: Netlifyがビルドを実行する際に使用する、環境関数を指定します。デプロイ後のランタイプでは使用されません。また、環境関数は、キーと値のペアでの設定が必要となる為、以下のように定義します。
+
+```toml
+[build]
+  ...
+
+[build.environment]
+  API_KEY = "abc123"
+  NODE_ENV = "production"
+```
+
+- `ignore`: Netlifyはデフォルトで、Git のコミット差分を見て変更があるかどうかを自動判定しますが、このプロパティを指定することで、そのスクリプトの戻り値に応じてビルドをスキップするか実行するかを決定します。スクリプトが 「0（成功）」を返した場合はビルドをスキップします。「0 以外（失敗）」を返すとビルドを実行します。
+
+```toml
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ./frontend" # 特定ディレクトリに差分がないときだけスキップ
+```
+
+- **`ignore`の使いどころ**
+
+  - フロントエンドだけ更新されたときに、関数のビルドをスキップしたい
+  - ドキュメントだけ更新されたときはビルド不要にしたい
+  - 特定のディレクトリ以外に変更がなければスキップ
+
+- `processing`: processing プロパティを使用することで、Pretty URLs のポストプロセッシング（Pretty URL を適用するかどうか）の設定を管理できます。
+
+**Pretty URL** とは、「拡張子（.html, .php など）を含まない」、「クエリパラメータがない（できるだけ）」、「短くて意味が明確」、「SEO や UX に優しい」、きれいな URL のことを言います。
+
+## [functions]セクション
+
+- `directory`: Netlify Dev（ローカル開発）環境で使用されるサーバーレス関数のソースコードの場所を指定します。ソースコードへのパスは、絶対パスまたはプロジェクトルートからの相対パスで指定します。
+
+`[build].functions`との違いは、`[build].functions`は、Netlifyが本番環境でデプロイする「ビルド済み関数」のディレクトリを指定するのに対して、`[functions].directory`では、Dev（ローカル開発）で使用する「関数のソースコード」の場所を指定しているところにあります。
+
+- `node_bundler`: Netlify Functionsをローカル開発やビルド時にどのようにバンドルするかを指定するためのオプションです。`netlify dev`（Netlify CLI）で使用します。
+
+**利用可能な値は、以下があります。**
+| 値 | 説明 |
+| --------- | --------------------------------- |
+| `esbuild` | 高速なモダンバンドラ。TypeScript や最新の JS 構文にも対応 |
+| `zisi` | 旧式の Netlify独自バンドラ（※レガシー用途） |
+| `none` | バンドルしない。関数コードをそのまま使用（自己管理が必要） |
+
+- `external_node_modules`: Netlifyのローカル開発や関数のビルド時に、特定の`npm`モジュールをバンドル対象から除外し、Netlifyのサーバーレスランタイム（Lambda）上にある同名のモジュールを使用するための設定です。その結果、関数のバンドルサイズを小さく抑えることができます。なお、この設定はローカル開発環境でのみ有効であり、本番環境には影響しません。
+
+- `included_files`: 関数ファイル内でコードとして直接参照されていない、関数の実行時に必要となる追加ファイルを明示的に指定します。これにより、それらのファイルが関数のバンドルに含まれるようになります。
