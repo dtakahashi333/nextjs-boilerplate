@@ -14,20 +14,20 @@ const navItems = [
     path: "/blog/javascript/introduction",
   },
   {
-    title: "React",
-    path: "/blog/react/introduction",
-  },
-  {
-    title: "アルゴリズム",
-    path: "/blog/algorithms/introduction",
-  },
-  {
     title: "TypeScript",
     path: "/blog/typescript/configuration",
   },
   {
+    title: "React",
+    path: "/blog/react/introduction",
+  },
+  {
     title: "Netlify",
     path: "/blog/netlify/configuration",
+  },
+  {
+    title: "アルゴリズム",
+    path: "/blog/algorithms/introduction",
   },
 ];
 

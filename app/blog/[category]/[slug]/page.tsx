@@ -21,7 +21,7 @@ export default function Page({
     { encoding: "utf-8" }
   );
   return (
-    <div className="prose !max-w-none !p-10">
+    <div className="prose !max-w-4xl !p-10">
       <MDXRemote
         source={source}
         options={{

@@ -1,0 +1,200 @@
+# Document Object Model（DOM）
+
+## DOM とは？
+
+DOM とは Document Object Model の略で、HTML や XML 文書をツリー構造のオブジェクトとして表現したものです。これにより、JavaScript などのプログラムから文書の内容や構造を動的に操作できます。
+
+DOM は、HTML 文書そのものではなく、ブラウザが HTML を読み込んだ際にメモリ上に構築されるオブジェクト構造であり、この構造を通じて JavaScript での動的な読み取り・変更が可能になります。
+
+例えば、以下のような HTML 要素は：
+
+```html
+<p>Hello, world</p>
+```
+
+は、ブラウザによってメモリ上に DOM として構築されることにより、JavaScript から以下のように動的に内容を変更することが可能です。
+
+```js
+document.querySelector("p").textContent = "Hi there!";
+```
+
+このコードでは、`<p>`要素を選択し、そのテキストを`"Hello, world"`から`"Hi there!"`に書き換えています。
+
+### キーコンセプト
+
+| 用語                       | 意味・説明                                                         |
+| -------------------------- | ------------------------------------------------------------------ |
+| **Document（文書）**       | ブラウザに読み込まれた HTML 文書（ウェブページ）                   |
+| **Object（オブジェクト）** | HTML 文書内の各要素（タグなど）はオブジェクトとして扱われる        |
+| **Model（モデル）**        | これらのオブジェクトはツリー構造（木構造）としてメモリに表現される |
+
+## カスタム要素について
+
+JavaScript で`HTMLElement`クラスを継承することにより、再利用可能な独自の（カスタム）HTML 要素を定義することができます。これらの要素は Light DOM 上に作成されます。Light DOM とは、次に出てくる Shadow DOM の対照として使われる言葉で、普段私たちが扱っている通常の HTML 要素のことを指します。
+
+カスタム要素は以下のように定義されます。
+
+1. HTMLElement を継承したクラスの作成
+
+```js
+class MyGreeting extends HTMLElement {
+  ...
+}
+```
+
+2. クラス・コンストラクタの定義
+
+```js
+class MyGreeting extends HTMLElement {
+  constructor() {
+    super(); // 親クラス（HTMLElement）のコンストラクタの呼び出し。
+    this.innerHTML = "<p>こんにちは、カスタム要素です</p>";
+  }
+}
+```
+
+3. カスタム要素の登録
+
+クラス定義の外側で、定義したカスタム要素の登録を行います。この際の注意点としては、**カスタム要素名（例：`my-greeting`）には、必ずハイフンを含む必要があります。**
+
+```js
+customElements.define("my-greeting", MyGreeting);
+```
+
+4. カスタム要素の使用
+
+カスタム要素は、HTML 内で以下のように使用することができます。
+
+```html
+<my-greeting></my-greeting>
+```
+
+### 既存の HTML 要素からの継承（拡張型カスタム要素）
+
+上記では、新しいカスタム要素の定義方法について説明しましたが、既存の HTML 要素を拡張してカスタム要素を定義することも可能です。ただし、この機能は、現在のところ一部のブラウザでのみサポートされています。
+
+例えば、ボタン要素内のテキストを定義した要素を作るには、以下のように行います。
+
+1. カスタム要素の定義
+
+```js
+class MyButton extends HTMLButtonElement {
+  constructor() {
+    super(); // 親クラス（HTMLButtonElement）のコンストラクタの呼び出し。
+    this.textContent = "このボタンをクリック！";
+  }
+}
+```
+
+2. カスタム要素の登録
+
+カスタム要素の登録の際に、継承する要素を指定します。
+
+```js
+customElements.define("my-button", MyButton, { extends: "button" });
+```
+
+3. カスタム要素の使用
+
+既存の HTML 要素を継承したカスタム要素は、以下のように使用できます。
+
+```html
+<button is="my-button"></button>　/* <my-button></my-button>とはしない */
+```
+
+## Shadow DOM とは？
+
+カスタム要素で、その内部の構造やスタイルを外部から独立させてカプセル化するために、Shadow DOM という仕組みが使われます。
+
+これにより、要素内の HTML や CSS は外部のスタイルの影響を受けにくくなります（完全に防げるわけではありません）。また逆に内部のスタイルが外部に影響を与えることもありません。これは、Shadow DOM によって要素の構造とスタイルがカプセル化（分離）されているためです。
+
+一方、Light DOM（通常の HTML 構造）では、外部の CSS が影響を及ぼすため、スタイルの変更が可能です。
+
+例えば、以下のように定義されたカスタム要素では、要素内部が Light DOM として構築されているため、通常の HTML 要素と同様に、外部の CSS からもスタイルの変更が可能です。また、レンダリング順や CSS の優先度によっては、要素内の `<style>` タグの影響が、同じページ内の他の `<p>` 要素にも及ぶ可能性があります。
+
+```js
+class MyBox extends HTMLElement {
+  constructor() {
+    super();
+    this.innerHTML = `
+      <style>
+        p { color: red; font-weight: bold; }
+      </style>
+      <p>Styled without Shadow DOM</p>
+    `;
+  }
+}
+
+customElements.define("my-box", MyBox);
+```
+
+それでは以下に、Shadow DOM の定義の仕方を解説します。
+
+1. カスタム要素の定義
+
+通常のカスタム要素同様に、HTMLElement を継承したカスタム要素を定義します。
+
+```js
+class MyBox extends HTMLElement {
+  constructor() {
+    super();
+  }
+}
+```
+
+2. Shadow DOM の定義
+
+クラスのコンストラクタ内で attachShadow() を使って Shadow DOM を作成し、その中に構造とスタイルを定義します。
+
+オプションの `mode: "open"` を指定すると、作成された Shadow DOM に対して `element.shadowRoot` から、その内容にアクセスできるようになります。一方、`mode: "closed"` を指定すると、`shadowRoot` は外部から参照できなくなり、その内容へのアクセスは遮断されます。`mode: "closed"`は、内部構造をカプセル化して完全に隠したい場合に使います。
+
+```js
+class MyBox extends HTMLElement {
+  constructor() {
+    super();
+    const shadow = this.attachShadow({ mode: "open" }); // <- 違い
+    shadow.innerHTML = `
+      <style>
+        p { color: red; font-weight: bold; }
+      </style>
+      <p>Styled with Shadow DOM</p>
+    `;
+  }
+}
+```
+
+3. カスタム要素の登録
+
+カスタム要素を登録の際は、通常のカスタム要素同様に行います。
+
+```js
+customElements.define("my-box", MyBox);
+```
+
+## `:host`（CSS）について
+
+それでは、カスタム要素そのもののスタイルを定義したい場合はどうすればよいでしょうか。これは **Shadow DOM を使っている場合に限られます**が、カスタム要素自体のスタイルを指定する場合には `:host` セレクタを使用することができます。
+
+```js
+class MyBox extends HTMLElement {
+  constructor() {
+    super();
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          border: 2px solid green;
+        }
+      </style>
+      <p>I'm inside shadow DOM</p>
+    `;
+  }
+}
+
+customElements.define("my-box", MyBox);
+```
+
+上の例では、`:host` セレクタによって、Shadow DOM 内から、外側のカスタム要素 `<my-box>` 自体にスタイルが適用されます。
+
+ところで、Angular のコンポーネントでも `:host` セレクタが使用されることがありますが、これは 必ずしも Shadow DOM を使用しているわけではないことに注意しましょう。Angular の場合、通常は「ViewEncapsulation（ビューのカプセル化）」という機構を使って、コンポーネント単位でスタイルを分離しており、その一環として `:host` が利用されています。
