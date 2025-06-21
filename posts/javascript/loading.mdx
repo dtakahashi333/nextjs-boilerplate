@@ -1,0 +1,117 @@
+# JavaScriptの読み込み
+
+## JavaScriptの読み込みのタイミング
+
+JavaScriptを使ってHTML要素を動的に扱う場合、**JavaScriptコードの実行タイミングが非常に重要**になります。
+
+HTMLは通常上から順に**コードがパース（解析）**されていくため、JavaScriptが該当の要素より前に実行されると、まだその要素がDOMに存在しておらず、意図した処理が正しく行えません。
+
+例えば、以下の例では、`getElementById('message')`が呼び出された時点では`<div id="message">元のテキスト</div>`がまだ解析されていないため、要素が取得できず、代わりに`null`が返されます。そのため、コンソールには「要素が見つかりませんでした」のメッセージが表示されます。
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>失敗例</title>
+    <script>
+      // この時点ではまだ <div id="message"> がパースされていない
+      const element = document.getElementById('message');
+      if (element) {
+        element.textContent = 'こんにちは！';
+      } else {
+        console.log('要素が見つかりませんでした');
+      }
+    </script>
+  </head>
+  <body>
+    <div id="message">元のテキスト</div>
+  </body>
+</html>
+```
+
+JavaScriptを外部ファイルに分けた場合でも、HTMLの`<head>`内など、**DOMが構築される前に読み込んで実行される**と、同様の問題が発生します。
+
+### JavaScriptをHTMLの末尾に配置する
+
+従来、この問題を回避するために、**JavaScriptの`<script>`タグをHTMLの末尾（`</body>` タグの直前）に配置する方法**が使われてきました。この方法では、スクリプトが実行される時点でHTMLのパースがすでに完了しており、すべてのDOM要素を安全に操作できます。
+
+なお、参考として、**jQueryライブラリでは`DOMContentLoaded`イベントを利用することで、HTMLの`<head>`内にスクリプトを記述した場合でも、この問題を解決できる仕組み**が提供されています。
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jQueryの例</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script>
+      // DOMの構築が完了した後に実行される
+      $(document).ready(function() {
+        $('#message').text('こんにちは！');
+      });
+    </script>
+  </head>
+  <body>
+    <div id="message">元のテキスト</div>
+  </body>
+</html>
+```
+
+## モダンJavaScript
+
+しかし、JavaScriptをHTMLの末尾に配置する方法には限界があり、ページの構造やスクリプトの配置場所に制約が生じるため、より柔軟で明示的な制御方法が求められるようになりました。
+
+そのため、現在では`async`や`defer`属性を使って、HTMLのパースとJavaScriptの実行タイミングを制御する方法が一般的に使われています。
+
+### defer属性
+
+`<script>`タグに`defer`属性を付けると、そのスクリプトは **HTMLのパースと並行して非同期的に読み込まれ**、HTMLのパースの完了後に**順番通りに実行**されます。
+
+つまり、ページの読み込みを妨げずにスクリプトを読み込み、DOMが完全に構築された後で安全にスクリプトを実行できる仕組みです。
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>deferの例</title>
+    <!-- HTMLのパース完了後に順番通りに実行される -->
+    <script src="script1.js" defer></script>
+    <script src="script2.js" defer></script>
+  </head>
+  <body>
+    <div id="message">元のテキスト</div>
+  </body>
+</html>
+```
+
+なお、`defer`属性は 外部スクリプト専用（`src`属性が必要）です。
+
+### async属性
+
+`<script>`タグに `async` 属性を付けると、そのスクリプトは**HTMLのパースと並行して非同期的に読み込まれ、スクリプトの読み込みが完了したタイミングで即座に実行されます**。
+
+このため、**HTMLのパースが完了する前にスクリプトが実行される可能性**があり、DOM操作などには注意が必要です。
+
+`async`属性は、HTML要素に直接影響を与えない サードパーティ製ライブラリや解析ツールなどのスクリプトの読み込みに適しています。
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>async属性の例</title>
+
+    <!-- サードパーティスクリプトの非同期読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/google-analytics-js@0.1.2/gajs.min.js" async></script>
+
+    <script>
+      // このスクリプトは、ページの読み込み中に実行される
+      console.log('ページ読み込み中');
+    </script>
+  </head>
+  <body>
+    <h1>こんにちは！</h1>
+    <p>このページには非同期で読み込まれる解析スクリプトが含まれています。</p>
+  </body>
+</html>
+```
+
+非同期で読み込まれるため、ユーザーの操作性（表示の速さ）に悪影響を与えません。

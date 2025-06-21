@@ -11,6 +11,7 @@ export const blogNav: BlogNav = {
   javascript: [
     { title: "はじめに", slug: "introduction" },
     { title: "DOM", slug: "dom" },
+    { title: "JavaScriptの読み込み", slug: "loading" },
     { title: "クロージャ", slug: "closure" },
     { title: "スコープ", slug: "scope" },
     { title: "var, let, const", slug: "var-let-const" },
