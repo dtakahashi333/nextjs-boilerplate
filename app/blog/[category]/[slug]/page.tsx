@@ -1,29 +1,32 @@
 // /app/blog/[category]/[slug]/page.tsx
-import { use } from "react";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import { MDXRemote } from "next-mdx-remote/rsc";
+// import InlineCode from "@/components/InlineCode";
 import remarkGfm from "remark-gfm";
+// import remarkSlug from "remark-slug";
 import rehypePrism from "rehype-prism-plus";
-
-// import MdxWrapper from "@/components/MdxWrapper";
+// import rehypeSlug from "rehype-slug";
+// import rehypeAutolinkHeadings from "rehype-autolink-headings";
+// import rehypeHighlight from "rehype-highlight";
 
 import "prism-themes/themes/prism-one-light.css";
 
-export default function Page({
+export default async function Page({
   params,
 }: {
-  params: Promise<{ category: string; slug: string }>;
+  params: { category: string; slug: string };
 }) {
-  const { category, slug } = use(params);
-  const source = fs.readFileSync(
+  const { category, slug } = params;
+  const source = await fs.readFile(
     path.join(process.cwd(), "posts", category, `${slug}.mdx`),
     { encoding: "utf-8" }
   );
   return (
-    <div className="prose !max-w-4xl !p-10">
+    <div className="prose prose-code:before:content-none prose-code:after:content-none !max-w-4xl !p-10">
       <MDXRemote
         source={source}
+        // components={{ code: InlineCode }}
         options={{
           mdxOptions: {
             remarkPlugins: [remarkGfm],
@@ -35,18 +38,21 @@ export default function Page({
   );
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const contentPath = path.join(process.cwd(), "posts");
-  const categories = fs.readdirSync(contentPath);
+  const categories = await fs.readdir(contentPath);
   const params: { category: string; slug: string }[] = [];
   for (const category of categories) {
     const categoryPath = path.join(contentPath, category);
-    if (fs.statSync(categoryPath).isDirectory()) {
-      const files = fs.readdirSync(categoryPath);
-      files.forEach((file) => {
-        const slug = file.replace(/\.mdx$/, "");
-        params.push({ category, slug });
-      });
+    const stat = await fs.stat(categoryPath);
+    if (stat.isDirectory()) {
+      const files = await fs.readdir(categoryPath);
+      for (const file of files) {
+        if (file.endsWith(".mdx")) {
+          const slug = file.replace(/\.mdx$/, "");
+          params.push({ category, slug });
+        }
+      }
     }
   }
   return params;
