@@ -1,4 +1,7 @@
-export default function Home() {
+// /app/page.tsx
+
+// export default function Home() {
+const Home = () => {
   return (
     <div
       className="flex-1 max-w-7xl mx-auto h-[calc(100vh-64px)]"
@@ -33,4 +36,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

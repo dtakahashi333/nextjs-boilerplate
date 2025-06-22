@@ -1,8 +1,12 @@
+// / app/manifest.ts
+
 import type { MetadataRoute } from "next";
 
-export default function manifest(): MetadataRoute.Manifest {
+const manifest = (): MetadataRoute.Manifest => {
   return {
     name: "Frontend Tutorial",
     short_name: "FrontendTutorial",
   };
-}
+};
+
+export default manifest;

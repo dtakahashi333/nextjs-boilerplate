@@ -1,3 +1,5 @@
+// /app/blog/[category]/[slug]/layout.tsx
+
 // Add the `"use client"` directive at the top
 "use client";
 
@@ -5,11 +7,7 @@ import { usePathname } from "next/navigation";
 import { HomeIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const BlogLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const paths = pathname.split("/").filter((path) => path);
   return (
@@ -42,4 +40,6 @@ export default function BlogLayout({
       <section className="w-64 h-full border-l overflow-y-auto"></section>
     </div>
   );
-}
+};
+
+export default BlogLayout;

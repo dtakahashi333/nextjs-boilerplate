@@ -1,3 +1,5 @@
+// /components/PageBody.tsx
+
 "use client";
 
 import Link from "next/link";
@@ -32,7 +34,8 @@ const navItems = [
 ];
 
 // Functional component with TypeScript.
-const PageBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// const PageBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const PageBody = ({ children }: { children: React.ReactNode }) => {
   const { setIsOpen } = useSidebar();
   return (
     <>

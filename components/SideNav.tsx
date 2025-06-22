@@ -1,4 +1,5 @@
 // /components/SideNav.tsx
+
 "use client";
 
 import Link from "next/link";
@@ -12,7 +13,7 @@ interface SideNavProps {
   category: string;
 }
 
-export default function SideNav({ category }: SideNavProps) {
+const SideNav = ({ category }: SideNavProps) => {
   const { isOpen, setIsOpen } = useSidebar();
   const pathname = usePathname();
   const navItems = blogNav[category] || [];
@@ -101,4 +102,6 @@ export default function SideNav({ category }: SideNavProps) {
       </div>
     </>
   );
-}
+};
+
+export default SideNav;

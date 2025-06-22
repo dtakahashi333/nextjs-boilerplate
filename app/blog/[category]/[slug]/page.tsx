@@ -1,4 +1,5 @@
 // /app/blog/[category]/[slug]/page.tsx
+
 import fs from "fs";
 import path from "path";
 import React, { use } from "react";
@@ -11,21 +12,22 @@ import rehypePrism from "rehype-prism-plus";
 // import rehypeAutolinkHeadings from "rehype-autolink-headings";
 // import rehypeHighlight from "rehype-highlight";
 
+import "github-markdown-css/github-markdown.css";
 import "prism-themes/themes/prism-one-light.css";
 
-// export default function Page({ params }: PageProps) {
-const Page = ({
-  params,
-}: {
-  params: Promise<{ category: string; slug: string }>;
-}) => {
+interface PageProps {
+  category: string;
+  slug: string;
+}
+
+const Page = ({ params }: { params: Promise<PageProps> }) => {
   const { category, slug } = use(params);
   const source = fs.readFileSync(
     path.join(process.cwd(), "posts", category, `${slug}.mdx`),
     { encoding: "utf-8" }
   );
   return (
-    <div className="prose prose-code:before:content-none prose-code:after:content-none !max-w-4xl !p-10">
+    <div className="markdown-body !max-w-4xl !p-10">
       <MDXRemote
         source={source}
         // components={{ code: InlineCode }}
