@@ -12,8 +12,9 @@ import rehypePrism from "rehype-prism-plus";
 // import rehypeAutolinkHeadings from "rehype-autolink-headings";
 // import rehypeHighlight from "rehype-highlight";
 
-import "github-markdown-css/github-markdown.css";
 import "prism-themes/themes/prism-one-light.css";
+import "github-markdown-css/github-markdown.css";
+import "./page.scss";
 
 interface PageProps {
   category: string;
@@ -27,7 +28,7 @@ const Page = ({ params }: { params: Promise<PageProps> }) => {
     { encoding: "utf-8" }
   );
   return (
-    <div className="markdown-body !max-w-4xl !p-10">
+    <article className="markdown-body max-w-4xl p-10">
       <MDXRemote
         source={source}
         // components={{ code: InlineCode }}
@@ -38,7 +39,7 @@ const Page = ({ params }: { params: Promise<PageProps> }) => {
           },
         }}
       />
-    </div>
+    </article>
   );
 };
 export default Page;

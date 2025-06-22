@@ -1,0 +1,9 @@
+.markdown-body ol {
+  list-style-position: inside;
+  counter-reset: list-counter;
+}
+
+.markdown-body ol > li {
+  list-style-type: decimal;
+  position: relative;
+}
