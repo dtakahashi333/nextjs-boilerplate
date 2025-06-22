@@ -1,6 +1,7 @@
 // /app/blog/[category]/[slug]/page.tsx
-import fs from "fs/promises";
+import fs from "fs";
 import path from "path";
+import React, { use } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 // import InlineCode from "@/components/InlineCode";
 import remarkGfm from "remark-gfm";
@@ -12,13 +13,14 @@ import rehypePrism from "rehype-prism-plus";
 
 import "prism-themes/themes/prism-one-light.css";
 
-export default async function Page({
+// export default function Page({ params }: PageProps) {
+const Page = ({
   params,
 }: {
-  params: { category: string; slug: string };
-}) {
-  const { category, slug } = params;
-  const source = await fs.readFile(
+  params: Promise<{ category: string; slug: string }>;
+}) => {
+  const { category, slug } = use(params);
+  const source = fs.readFileSync(
     path.join(process.cwd(), "posts", category, `${slug}.mdx`),
     { encoding: "utf-8" }
   );
@@ -36,17 +38,18 @@ export default async function Page({
       />
     </div>
   );
-}
+};
+export default Page;
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const contentPath = path.join(process.cwd(), "posts");
-  const categories = await fs.readdir(contentPath);
+  const categories = fs.readdirSync(contentPath);
   const params: { category: string; slug: string }[] = [];
   for (const category of categories) {
     const categoryPath = path.join(contentPath, category);
-    const stat = await fs.stat(categoryPath);
+    const stat = fs.statSync(categoryPath);
     if (stat.isDirectory()) {
-      const files = await fs.readdir(categoryPath);
+      const files = fs.readdirSync(categoryPath);
       for (const file of files) {
         if (file.endsWith(".mdx")) {
           const slug = file.replace(/\.mdx$/, "");
